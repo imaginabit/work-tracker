@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import {
-  getWeekDays, getWeekString, getDateString, isToday, isWeekend, formatHour
+  getWeekDays, getWeekString, getDateString, isWeekend, formatHour
 } from '../utils/dateUtils';
 import { useSettings } from '../utils/settingsUtils';
 import Modal from '../components/Modal';
@@ -69,20 +69,8 @@ export default function SchedulePage() {
 
   function extractTags(text) {
     const tags = [];
-    const cleaned = text.replace(/\[([^\]]+)\]/g, (_, tag) => {
-      tags.push(tag);
-      return '';
-    }).trim();
-    return { tags, remaining: cleaned };
-  }
-
-  const myEntries = useMemo(() => {
-    return state.timeEntries.filter(e => e.userId === currentUserId);
-  }, [state.timeEntries, currentUserId]);
-
-  function getMyEntriesForCell(date, hour) {
-    const dateStr = getDateString(date);
-    return myEntries.filter(e => e.date === dateStr && e.startHour <= hour && e.endHour > hour);
+    text.replace(/\[([^\]]+)\]/g, (_, tag) => tags.push(tag));
+    return { tags, remaining: text.replace(/\[([^\]]+)\]/g, '').trim() };
   }
 
   const taskMap = useMemo(() => {
